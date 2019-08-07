@@ -1,0 +1,29 @@
+22:34:25 **** Incremental Build of configuration Debug for project stm32f3xx_DriverDevelopment ****
+make -j8 all 
+Building file: ../src/main.c
+Building file: ../drivers/src/stm32f302xx_gpio.c
+Invoking: MCU GCC Compiler
+Invoking: MCU GCC Compiler
+D:\Udemy\Embedded\STM32DriverDevelopment\stm32f3xx_DriverDevelopment\Debug
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DSTM32 -DSTM32F3 -DSTM32F30 -DSTM32F302R8Tx -DNUCLEO_F302R8 -DDEBUG -I"D:/Udemy/Embedded/STM32DriverDevelopment/stm32f3xx_DriverDevelopment/drivers/inc" -O0 -g3 -Wall -fmessage-length=0 -ffunction-sections -c -MMD -MP -MF"src/main.d" -MT"src/main.o" -o "src/main.o" "../src/main.c"
+D:\Udemy\Embedded\STM32DriverDevelopment\stm32f3xx_DriverDevelopment\Debug
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DSTM32 -DSTM32F3 -DSTM32F30 -DSTM32F302R8Tx -DNUCLEO_F302R8 -DDEBUG -I"D:/Udemy/Embedded/STM32DriverDevelopment/stm32f3xx_DriverDevelopment/drivers/inc" -O0 -g3 -Wall -fmessage-length=0 -ffunction-sections -c -MMD -MP -MF"drivers/src/stm32f302xx_gpio.d" -MT"drivers/src/stm32f302xx_gpio.o" -o "drivers/src/stm32f302xx_gpio.o" "../drivers/src/stm32f302xx_gpio.c"
+Finished building: ../src/main.c
+ 
+Finished building: ../drivers/src/stm32f302xx_gpio.c
+ 
+Building target: stm32f3xx_DriverDevelopment.elf
+Invoking: MCU GCC Linker
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -T"D:/Udemy/Embedded/STM32DriverDevelopment/stm32f3xx_DriverDevelopment/LinkerScript.ld" -Wl,-Map=output.map -Wl,--gc-sections -o "stm32f3xx_DriverDevelopment.elf" @"objects.list"   -lm
+Finished building target: stm32f3xx_DriverDevelopment.elf
+ 
+make --no-print-directory post-build
+Generating binary and Printing size information:
+arm-none-eabi-objcopy -O binary "stm32f3xx_DriverDevelopment.elf" "stm32f3xx_DriverDevelopment.bin"
+arm-none-eabi-size "stm32f3xx_DriverDevelopment.elf"
+   text	   data	    bss	    dec	    hex	filename
+    940	   1080	   1092	   3112	    c28	stm32f3xx_DriverDevelopment.elf
+ 
+
+22:34:27 Build Finished (took 2s.193ms)
+
