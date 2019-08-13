@@ -89,7 +89,8 @@ void GPIO_ToggleOutputPin(GPIO_TypeDef *pGPIOx,uint8_t PinNumber);
 /*
  * IRQ Config
  */
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t status);
+void GPIO_IRQITConfig(uint8_t IRQNumber, uint8_t status);
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 void GPIO_IRQHandling(uint8_t PinNumber);
 
 #endif /* INC_STM32F302XX_GPIO_H_ */

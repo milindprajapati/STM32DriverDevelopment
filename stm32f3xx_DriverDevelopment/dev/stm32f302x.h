@@ -11,6 +11,7 @@
 #include <stdint.h>
 
 
+
 #define ENABLE 1
 #define DISABLE 0
 #define SET ENABLE
@@ -18,6 +19,41 @@
 #define GPIO_PIN_SET SET
 #define GPIO_PIN_RESET RESET
 #define __vo volatile
+/*
+ * Processor Specific Registers
+ *
+ *
+ */
+
+#define NVIC_ISER0	((__vo uint32_t*)0xE000E100)
+#define NVIC_ISER1	((__vo uint32_t*)0xE000E104)
+#define NVIC_ISER2	((__vo uint32_t*)0xE000E108)
+#define NVIC_ISER3	((__vo uint32_t*)0xE000E10C)
+
+#define NVIC_ICER0	((__vo uint32_t*)0xE000E180)
+#define NVIC_ICER1	((__vo uint32_t*)0xE000E184)
+#define NVIC_ICER2	((__vo uint32_t*)0xE000E188)
+#define NVIC_ICER3	((__vo uint32_t*)0xE000E18C)
+
+#define NVIC_PR_BASE	((__vo uint32_t*)0xE000E400)
+#define NO_PR_BITS 		4
+
+#define NVIC_IRQPR_0 	0
+#define NVIC_IRQPR_1	1
+#define NVIC_IRQPR_2	2
+#define NVIC_IRQPR_3	3
+#define NVIC_IRQPR_4	4
+#define NVIC_IRQPR_5	5
+#define NVIC_IRQPR_6	6
+#define NVIC_IRQPR_7	7
+#define NVIC_IRQPR_8	8
+#define NVIC_IRQPR_9	9
+#define NVIC_IRQPR_10	10
+#define NVIC_IRQPR_11	11
+#define NVIC_IRQPR_12	12
+#define NVIC_IRQPR_13	13
+#define NVIC_IRQPR_14	14
+#define NVIC_IRQPR_15	15
 
 /*< Base Address of Memory >*/
 #define FLASH_BASE            ((uint32_t)0x08000000) /*!< FLASH base address in the alias region */
@@ -43,6 +79,8 @@
 /*!< APB2 peripherals */
 #define SPI1_BASE             (APB2PERIPH_BASE + 0x00003000)
 #define USART1_BASE           (APB2PERIPH_BASE + 0x00003800)
+#define EXTI_BASE             (APB2PERIPH_BASE + 0x00000400)
+#define SYSCFG_BASE           (APB2PERIPH_BASE + 0x00000000)
 
 /*!< AHB1 peripherals */
 #define RCC_BASE              (AHB1PERIPH_BASE + 0x00001000)
@@ -76,6 +114,25 @@
 #define GPIOE               ((GPIO_TypeDef *) GPIOE_BASE)
 #define GPIOF               ((GPIO_TypeDef *) GPIOF_BASE)
 
+#define EXTI 				((EXTI_TypeDef *) EXTI_BASE)
+#define SYSCFG              ((SYSCFG_TypeDef *) SYSCFG_BASE)
+
+#define GPIO_BASEADDR_TO_CODE(x) 	((x == GPIOA)? 0 :\
+									(x == GPIOB) ? 1 :\
+									(x == GPIOC) ? 2 :\
+									(x == GPIOD) ? 3 :\
+									(x == GPIOE) ? 4 :\
+									(x == GPIOF) ? 5 : 0)
+/*
+ * IRQ number of STM32F302xx
+ */
+#define IRQ_NO_EXTI0		6
+#define IRQ_NO_EXTI1		7
+#define IRQ_NO_EXTI2		8
+#define IRQ_NO_EXTI3		9
+#define IRQ_NO_EXTI4		10
+#define IRQ_NO_EXTI9_5		23
+#define IRQ_NO_EXTI15_10	40
 /*CLK Enable/Disable MACROs Definition*/
 
 /*
@@ -111,7 +168,7 @@
 /*
  CLK Enable MACROs for SYSCFG
 */
-
+#define SYSCFG_PCLK_EN() (RCC-> APB2ENR  |= (1<<0))
 
 /*
  CLK Disable MACROs for GPIOx
@@ -146,7 +203,7 @@
 /*
  * CLK Disable MACROs for SYSCFG
 */
-
+#define SYSCFG_PCLK_DI() (RCC-> APB2ENR  &= ~(1<<0))
 
 
 /*
@@ -159,7 +216,9 @@
 #define GPIOD_REG_RST() do{(RCC-> AHBRSTR  |= (1<<20));		(RCC-> AHBRSTR  &=~ (1<<20));}while(0)
 #define GPIOF_REG_RST() do{(RCC-> AHBRSTR  |= (1<<22));		(RCC-> AHBRSTR  &=~ (1<<22));}while(0)
 
-
+/*
+ * Perpheral Register Struct For GPIO
+ */
 typedef struct{
 	  __vo uint32_t MODER;        /*!< GPIO port mode register,                                  Address offset: 0x00 */
 	  __vo uint16_t OTYPER;       /*!< GPIO port output type register,                           Address offset: 0x04 */
@@ -177,6 +236,9 @@ typedef struct{
 	  uint16_t RESERVED3;         /*!< Reserved,  */
 }GPIO_TypeDef;
 
+/*
+ * Perpheral Register Struct For RCC
+ */
 typedef struct{
 		__vo uint32_t CR;         /*!< RCC clock control register,                                  Address offset: 0x00 */
 	  __vo uint32_t CFGR;       /*!< RCC clock configuration register,                            Address offset: 0x04 */
@@ -192,6 +254,55 @@ typedef struct{
 	  __vo uint32_t CFGR2;      /*!< RCC clock configuration register 2,                          Address offset: 0x2C */
 	  __vo uint32_t CFGR3;      /*!< RCC clock configuration register 3,                          Address offset: 0x30 */
 }RCC_TypeDef;
+
+/*
+ * Perpheral Register Struct For EXTI
+ */
+
+typedef struct {
+	__vo uint32_t IMR;
+	  __vo uint32_t EMR;
+	  __vo uint32_t RTSR;
+	  __vo uint32_t FTSR;
+	  __vo uint32_t SWIER;
+	  __vo uint32_t PR;
+	  uint32_t      RESERVED1;
+	  uint32_t      RESERVED2;
+	  __vo uint32_t IMR2;
+	  __vo uint32_t EMR2;
+	  __vo uint32_t RTSR2;
+	  __vo uint32_t FTSR2;
+	  __vo uint32_t SWIER2;
+	  __vo uint32_t PR2;
+}EXTI_TypeDef;
+
+/**
+  *  Perpheral Register Struct for SysConfig
+  */
+
+typedef struct
+{
+  __vo uint32_t CFGR1;      /*!< SYSCFG configuration register 1,                   Address offset: 0x00 */
+  __vo uint32_t RCR;        /*!< SYSCFG CCM SRAM protection register,               Address offset: 0x04 */
+  __vo uint32_t EXTICR[4];  /*!< SYSCFG external interrupt configuration registers, Address offset: 0x14-0x08 */
+  __vo uint32_t CFGR2;      /*!< SYSCFG configuration register 2,                    Address offset: 0x18 */
+  __vo uint32_t RESERVED0;  /*!< Reserved,                                                           0x1C */
+  __vo uint32_t RESERVED1;  /*!< Reserved,                                                          0x20 */
+  __vo uint32_t RESERVED2;  /*!< Reserved,                                                          0x24 */
+  __vo uint32_t RESERVED4;  /*!< Reserved,                                                          0x28 */
+  __vo uint32_t RESERVED5;  /*!< Reserved,                                                          0x2C */
+  __vo uint32_t RESERVED6;  /*!< Reserved,                                                          0x30 */
+  __vo uint32_t RESERVED7;  /*!< Reserved,                                                          0x34 */
+  __vo uint32_t RESERVED8;  /*!< Reserved,                                                          0x38 */
+  __vo uint32_t RESERVED9;  /*!< Reserved,                                                          0x3C */
+  __vo uint32_t RESERVED10; /*!< Reserved,                                                          0x40 */
+  __vo uint32_t RESERVED11; /*!< Reserved,                                                          0x44 */
+  __vo uint32_t RESERVED12; /*!< Reserved,                                                          0x48 */
+  __vo uint32_t RESERVED13; /*!< Reserved,                                                          0x4C */
+  __vo uint32_t CFGR3;      /*!< SYSCFG configuration register 3,                    Address offset: 0x50 */
+} SYSCFG_TypeDef;
+
+
 
 #include "stm32f302xx_gpio.h"
 #endif /* STM32F302X_H_ */
