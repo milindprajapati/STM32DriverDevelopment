@@ -1,6 +1,6 @@
-23:12:43 **** Incremental Build of configuration Debug for project stm32f3xx_DriverDevelopment ****
+15:27:37 **** Incremental Build of configuration Debug for project stm32f3xx_DriverDevelopment ****
 make -j8 all 
 make: Nothing to be done for 'all'.
 
-23:12:43 Build Finished (took 181ms)
+15:27:37 Build Finished (took 333ms)
 

@@ -1,0 +1,14 @@
+/*
+ * stm32f302xx_spi.h
+ *
+ *  Created on: Aug 16, 2019
+ *      Author: milin
+ */
+
+#ifndef INC_STM32F302XX_SPI_H_
+#define INC_STM32F302XX_SPI_H_
+
+#include <stm32f302x.h>
+
+
+#endif /* INC_STM32F302XX_SPI_H_ */

@@ -1,0 +1,40 @@
+/*
+ * stm32f302xx_spi.h
+ *
+ *  Created on: Aug 16, 2019
+ *      Author: milin
+ */
+
+#ifndef INC_STM32F302XX_SPI_H_
+#define INC_STM32F302XX_SPI_H_
+
+#include <stm32f302x.h>
+
+typedef struct{
+	uint8_t SPI_DeviceMode;
+	uint8_t SPI_BusConfig;
+	uint8_t SPI_SclkSpeed;
+	uint8_t SPI_DFF;
+	uint8_t SPI_CPOL;
+	uint8_t SPI_CPHA;
+	uint8_t SPI_SSM;
+}SPI_Config_t;
+
+typedef struct{
+	SPI_TypeDef *pSPIx;
+	SPI_Config_t SPIConfig;
+}
+
+/*Clk Setup*/
+void GPIO_PeriClkCtrl(GPIO_TypeDef *pGPIOx, uint8_t status);
+
+/*
+ * Init/DeInit IO
+ */
+void GPIO_Init(GPIO_Handle_t *pGPIOHandle);
+void GPIO_DeInit(GPIO_TypeDef *pGPIOx);
+
+
+
+
+#endif /* INC_STM32F302XX_SPI_H_ */

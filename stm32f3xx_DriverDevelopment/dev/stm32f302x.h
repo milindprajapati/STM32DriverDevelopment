@@ -19,6 +19,8 @@
 #define GPIO_PIN_SET SET
 #define GPIO_PIN_RESET RESET
 #define __vo volatile
+#define FLAG_RESET RESET
+#define FLAG_SET SET
 /*
  * Processor Specific Registers
  *
@@ -155,6 +157,7 @@
 /*
  CLK Enable MACROs for SPIx
 */
+#define SPI1_PCLK_EN() (RCC-> APB2ENR  |= (1<<12))
 #define SPI2_PCLK_EN() (RCC-> APB1ENR  |= (1<<14))
 #define SPI3_PCLK_EN() (RCC-> APB1ENR  |= (1<<15))
 
@@ -190,6 +193,7 @@
 /*
  CLK Disable MACROs for SPIx
 */
+#define SPI1_PCLK_DI() (RCC-> APB2ENR  &= ~(1<<12))
 #define SPI2_PCLK_DI() (RCC-> APB1ENR  &= ~(1<<14))
 #define SPI3_PCLK_DI() (RCC-> APB1ENR  &= ~(1<<15))
 
@@ -302,7 +306,92 @@ typedef struct
   __vo uint32_t CFGR3;      /*!< SYSCFG configuration register 3,                    Address offset: 0x50 */
 } SYSCFG_TypeDef;
 
+typedef struct
+{
+  __vo uint16_t CR1;      /*!< SPI Control register 1 (not used in I2S mode),       Address offset: 0x00 */
+  uint16_t  RESERVED0;    /*!< Reserved, 0x02                                                            */
+  __vo uint16_t CR2;      /*!< SPI Control register 2,                              Address offset: 0x04 */
+  uint16_t  RESERVED1;    /*!< Reserved, 0x06                                                            */
+  __vo uint16_t SR;       /*!< SPI Status register,                                 Address offset: 0x08 */
+  uint16_t  RESERVED2;    /*!< Reserved, 0x0A                                                            */
+  __vo uint16_t DR;       /*!< SPI data register,                                   Address offset: 0x0C */
+  uint16_t  RESERVED3;    /*!< Reserved, 0x0E                                                            */
+  __vo uint16_t CRCPR;    /*!< SPI CRC polynomial register (not used in I2S mode),  Address offset: 0x10 */
+  uint16_t  RESERVED4;    /*!< Reserved, 0x12                                                            */
+  __vo uint16_t RXCRCR;   /*!< SPI Rx CRC register (not used in I2S mode),          Address offset: 0x14 */
+  uint16_t  RESERVED5;    /*!< Reserved, 0x16                                                            */
+  __vo uint16_t TXCRCR;   /*!< SPI Tx CRC register (not used in I2S mode),          Address offset: 0x18 */
+  uint16_t  RESERVED6;    /*!< Reserved, 0x1A                                                            */
+  __vo uint16_t I2SCFGR;  /*!< SPI_I2S configuration register,                      Address offset: 0x1C */
+  uint16_t  RESERVED7;    /*!< Reserved, 0x1E                                                            */
+  __vo uint16_t I2SPR;    /*!< SPI_I2S prescaler register,                          Address offset: 0x20 */
+  uint16_t  RESERVED8;    /*!< Reserved, 0x22*/
+  } SPI_TypeDef;
 
+
+typedef struct
+{
+  __vo uint32_t CR1;      /*!< I2C Control register 1,            Address offset: 0x00 */
+  __vo uint32_t CR2;      /*!< I2C Control register 2,            Address offset: 0x04 */
+  __vo uint32_t OAR1;     /*!< I2C Own address 1 register,        Address offset: 0x08 */
+  __vo uint32_t OAR2;     /*!< I2C Own address 2 register,        Address offset: 0x0C */
+  __vo uint32_t TIMINGR;  /*!< I2C Timing register,               Address offset: 0x10 */
+  __vo uint32_t TIMEOUTR; /*!< I2C Timeout register,              Address offset: 0x14 */
+  __vo uint32_t ISR;      /*!< I2C Interrupt and status register, Address offset: 0x18 */
+  __vo uint32_t ICR;      /*!< I2C Interrupt clear register,      Address offset: 0x1C */
+  __vo uint32_t PECR;     /*!< I2C PEC register,                  Address offset: 0x20 */
+  __vo uint32_t RXDR;     /*!< I2C Receive data register,         Address offset: 0x24 */
+  __vo uint32_t TXDR;     /*!< I2C Transmit data register,        Address offset: 0x28 */
+}I2C_TypeDef;
+
+
+/*
+ * Bit position definitions SPI_CR1
+ */
+#define SPI_CR1_CPHA     				 0
+#define SPI_CR1_CPOL      				 1
+#define SPI_CR1_MSTR     				 2
+#define SPI_CR1_BR   					 3
+#define SPI_CR1_SPE     				 6
+#define SPI_CR1_LSBFIRST   			 	 7
+#define SPI_CR1_SSI     				 8
+#define SPI_CR1_SSM      				 9
+#define SPI_CR1_RXONLY      		 	10
+#define SPI_CR1_CRCL     			 	11
+#define SPI_CR1_CRCNEXT   			 	12
+#define SPI_CR1_CRCEN   			 	13
+#define SPI_CR1_BIDIOE     			 	14
+#define SPI_CR1_BIDIMODE      			15
+
+/*
+ * Bit position definitions SPI_CR2
+ */
+#define SPI_CR2_RXDMAEN		 			0
+#define SPI_CR2_TXDMAEN				 	1
+#define SPI_CR2_SSOE				 	2
+#define SPI_CR2_NSSP				 	3
+#define SPI_CR2_FRF						4
+#define SPI_CR2_ERRIE					5
+#define SPI_CR2_RXNEIE				 	6
+#define SPI_CR2_TXEIE					7
+
+
+/*
+ * Bit position definitions SPI_SR
+ */
+#define SPI_SR_RXNE						0
+#define SPI_SR_TXE				 		1
+#define SPI_SR_CHSIDE				 	2
+#define SPI_SR_UDR					 	3
+#define SPI_SR_CRCERR				 	4
+#define SPI_SR_MODF					 	5
+#define SPI_SR_OVR					 	6
+#define SPI_SR_BSY					 	7
+#define SPI_SR_FRE					 	8
 
 #include "stm32f302xx_gpio.h"
+#include "stm32f302xx_spi.h"
+#include "stm32f302xx_i2c.h"
+#include "stm32f302xx_usart.h"
+
 #endif /* STM32F302X_H_ */

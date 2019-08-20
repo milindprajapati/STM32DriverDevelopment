@@ -1,4 +1,7 @@
 "drivers/src/stm32f302xx_gpio.o"
-"src/main.o"
+"drivers/src/stm32f302xx_i2c.o"
+"drivers/src/stm32f302xx_spi.o"
+"drivers/src/stm32f302xx_usart.o"
+"src/spi_fd_tx.o"
 "startup/startup_stm32.o"
 "startup/sysmem.o"
